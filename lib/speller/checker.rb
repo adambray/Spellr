@@ -16,6 +16,8 @@ module Speller
     end
     
     def suggest(word)
+      return nil if correct?(word)
+      
       aspell_suggestions = Speller::ASpellWrapper.aspell_speller_suggest(@spell_checker, word, word.length)
       aspell_elements = Speller::ASpellWrapper.aspell_word_list_elements(aspell_suggestions)
 
