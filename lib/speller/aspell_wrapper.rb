@@ -1,4 +1,4 @@
-module Orthographer
+module Speller
   module ASpellWrapper
   
     extend FFI::Library

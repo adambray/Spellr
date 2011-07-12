@@ -1,17 +1,17 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "orthographer/version"
+require "speller/version"
 
 Gem::Specification.new do |s|
-  s.name        = "orthographer"
-  s.version     = Orthographer::VERSION
+  s.name        = "speller"
+  s.version     = Speller::VERSION
   s.authors     = ["Adam Bray"]
   s.email       = ["adam.bray@gmail.com"]
   s.homepage    = ""
   s.summary     = "Gem to check spelling"
   s.description = "Gem to check spelling"
 
-  s.rubyforge_project = "orthographer"
+  s.rubyforge_project = "speller"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
