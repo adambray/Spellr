@@ -3,7 +3,9 @@ require 'ffi'
 require File.expand_path('../../lib/speller', __FILE__)
 
 #Create a new Checker object
-my_checker = Speller::Checker.new
+my_config = Speller::Config.new("en_US")
+my_config.value("lang")
+my_checker = Speller::Checker.new(my_config.config)
 
 #Checks if a word is correct
 puts my_checker.correct?("word")
@@ -11,7 +13,9 @@ puts my_checker.correct?("wordd")
 
 #Returns an array of suggestions, nil if the word is correct
 #Should it be an empty array instead?
+puts my_checker.suggest("word")
 puts my_checker.suggest("wordd").join(", ")
+
 
 #Check a whole string, returns the word, offset, and suggestions for the first mispelled word
 result = my_checker.check_string("This is a a testz")

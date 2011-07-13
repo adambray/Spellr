@@ -3,20 +3,17 @@ module Speller
     
     #Initialize ASpellSpeller, with the minimum required configuration, language. 
     #I'd like to refactor this to either take an ASpell_Config or just a language
-    def initialize(lang = "en_US")
-      @config = Speller::ASpell.new_aspell_config
-      Speller::ASpell.config_replace(@config,"lang", lang)
-
-      possible_err = Speller::ASpell.new_aspell_speller(@spell_config)
+    def initialize(aspell_config)
+      possible_err = Speller::ASpell.new_aspell_speller(aspell_config)
       @spell_checker = Speller::ASpell.to_aspell_speller(possible_err)
     end
 
     def correct?(word)
-      Speller::ASpell.speller_check(@spell_checker, word, word.length) == 1 ? true : false
+        Speller::ASpell.speller_check(@spell_checker, word, word.length) == 1 ? true : false
     end
     
     def suggest(word)
-      return nil if correct?(word)
+      return [] if correct?(word)
       
       aspell_suggestions = Speller::ASpell.speller_suggest(@spell_checker, word, word.length)
       aspell_elements = Speller::ASpell.word_list_elements(aspell_suggestions)

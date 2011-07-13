@@ -9,22 +9,29 @@ module Speller
       attach_function method_name, c_method_name, arguments, return_type
     end
     
+    class AspellKeyInfo < FFI::Struct
+      layout :name,   :string,
+        :type,        :int,
+        :default,     :string,
+        :description, :string,
+        :flags,       :int,
+        :other_data,  :int
+    end
     
+    typedef :pointer, :aspell_config
+    typedef :pointer, :aspell_key_info
     
     #ASpell Config
-    aspell_method :new_aspell_config,
-      [],
-      :pointer,
-      false
+    aspell_method :new_aspell_config, [], :aspell_config, false                     #implemented
+    aspell_method :delete_aspell_config, [:aspell_config], :void, false             #implemented
+    aspell_method :config_replace, [:pointer, :string, :string], :void        
     
-    
-    #aspell_method :new_aspell_config, [], :pointer
-    aspell_method :config_replace, [:pointer, :string, :string], :void
-    aspell_method :delete_aspell_config, [:pointer], :void, false
-    aspell_method :config_clone, [:pointer], :pointer
-    aspell_method :config_error_number, [:pointer], :uint
-    aspell_method :config_error_message, [:pointer], :string
-    aspell_method :config_error, [:pointer], :pointer
+    # Can't figure out how to catch and handle errors in the C API, so I'm not using these now
+    # Wrapping a call that I know will throw an error in begin/rescue/end doesn't seem to work
+    # aspell_method :config_error_number, [:aspell_config], :uint
+    # aspell_method :config_error_message, [:aspell_config], :string
+    # aspell_method :config_error, [:pointer], :pointer
+    aspell_method :config_keyinfo, [:aspell_config, :string], :aspell_key_info
 
     #ASpell Key Enumeration
     aspell_method :key_info_enumeration_at_end, [:pointer], :int
