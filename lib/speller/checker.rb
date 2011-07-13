@@ -4,25 +4,25 @@ module Speller
     #Initialize ASpellSpeller, with the minimum required configuration, language. 
     #I'd like to refactor this to either take an ASpell_Config or just a language
     def initialize(lang = "en_US")
-      @config = Speller::ASpellWrapper.new_aspell_config
-      Speller::ASpellWrapper.aspell_config_replace(@config,"lang", lang)
+      @config = Speller::ASpell.new_aspell_config
+      Speller::ASpell.config_replace(@config,"lang", lang)
 
-      possible_err = Speller::ASpellWrapper.new_aspell_speller(@spell_config)
-      @spell_checker = Speller::ASpellWrapper.to_aspell_speller(possible_err)
+      possible_err = Speller::ASpell.new_aspell_speller(@spell_config)
+      @spell_checker = Speller::ASpell.to_aspell_speller(possible_err)
     end
 
     def correct?(word)
-      Speller::ASpellWrapper.aspell_speller_check(@spell_checker, word, word.length) == 1 ? true : false
+      Speller::ASpell.speller_check(@spell_checker, word, word.length) == 1 ? true : false
     end
     
     def suggest(word)
       return nil if correct?(word)
       
-      aspell_suggestions = Speller::ASpellWrapper.aspell_speller_suggest(@spell_checker, word, word.length)
-      aspell_elements = Speller::ASpellWrapper.aspell_word_list_elements(aspell_suggestions)
+      aspell_suggestions = Speller::ASpell.speller_suggest(@spell_checker, word, word.length)
+      aspell_elements = Speller::ASpell.word_list_elements(aspell_suggestions)
 
       suggestions = []
-      until ((word = Speller::ASpellWrapper.aspell_string_enumeration_next(aspell_elements)).nil?) do
+      until ((word = Speller::ASpell.string_enumeration_next(aspell_elements)).nil?) do
         suggestions << word
       end
       return suggestions
