@@ -13,7 +13,7 @@ When creating an instance of Speller::Config, you must specify one arguement, th
 
 You can then set any additional configuration options using set_value:
 
-	my_config.set_value("size", 5)
+	my_config.set_value("ignore-case", "true")
 
 *For info on what options are available, see the [GNU ASpell Documentation](http://aspell.net/man-html/The-Options.html)*
 
