@@ -7,6 +7,7 @@ my_config = Speller::Config.new("en_US")
 my_config.set_value("ignore-case", "true")
 my_checker = Speller::Checker.new(my_config.config)
 
+my_config.destroy
 #Checks if a word is correct
 puts my_checker.correct?("word")
 puts my_checker.correct?("wordd")
@@ -25,3 +26,5 @@ if result
 else
   puts "No mispellings found"
 end
+
+my_checker.destroy

@@ -53,3 +53,9 @@ If no misspellings are found, `check_string` returns `nil`.
 	else
 		puts "No mispellings found"
 	end
+	
+###Memory Management
+
+When you are done using an instance of Speller::Config or Speller::Checker, you should destroy them using the `destroy` method.
+
+Note that once you've created a Speller::Checker instance, you can destroy the instance of Speller::Config used to create it, if you wish.

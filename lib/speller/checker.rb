@@ -53,6 +53,11 @@ module Speller
         return check_string(string)
       end
     end
+    
+    def destroy
+      Speller::ASpell.delete_aspell_speller(@checker)
+      @checker = nil
+    end
 
   end
 end
