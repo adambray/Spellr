@@ -9,17 +9,17 @@ Before you can spell check a string, you need to set your configuration options.
 
 When creating an instance of Speller::Config, you must specify one arguement, the language code to be used:
 
-`my_config = Speller::Config.new("en_US")`
+	my_config = Speller::Config.new("en_US")
 
 You can then set any additional configuration options using set_value:
 
-`my_config.set_value("size", 5)`
+	my_config.set_value("size", 5)
 
 *For info on what options are available, see the [GNU ASpell Documentation](http://aspell.net/man-html/The-Options.html)*
 
 Once you've set all your configuration options, create a new instance of Speller::Checker:
 
-`my_checker = Speller::Checker.new(my_config.config)`
+	my_checker = Speller::Checker.new(my_config.config)
 
 **Note that you must set all options before creating a new Speller::Checker instance.**
 
@@ -29,13 +29,13 @@ Speller:Checker has a couple of methods for checking spelling:
 
 To check for correctness, use the `correct?` method:
 
-`my_checker.correct?("word") 	#returns true`
-`my_checker.correct?("wordd")	#returns false`
+	my_checker.correct?("word") 	#returns true
+	my_checker.correct?("wordd")	#returns false
 
 To get suggestions for a word, use the `suggest` method. This method returns the suggested corrections as an array of strings. If the word is spelled correctly, it returns an empty array.
 
-`my_checker.suggest("word")`
-`my_checker.suggest("wordd")`
+	my_checker.suggest("word")
+	my_checker.suggest("wordd")
 
 
 To check an entire string, use the `check_string` method, providing the string to check, and an optional integer offset indicating where to begin checking. If no offset is provided, the method will check from the beginning of the string.
@@ -44,12 +44,12 @@ The `check_string` method returns an array with three elements. The first elemen
 
 If no misspellings are found, `check_string` returns `nil`.
 
-`string = "This longg string has two misspelled words. The secondd misspelling is in the second sentence."
-
-result = my_checker.check_string(string)
-if result
-  puts "The word '#{result[0]}' is misspelled at offset #{result[1]}"
-  puts "Suggested spellings: #{result[2].join(", ")}"
-else
-  puts "No mispellings found"
-end`
+	string = "This longg string has two misspelled words. The secondd misspelling is in the second sentence."
+	
+	result = my_checker.check_string(string)
+	if result
+  		puts "The word '#{result[0]}' is misspelled at offset #{result[1]}"
+  		puts "Suggested spellings: #{result[2].join(", ")}"
+	else
+		puts "No mispellings found"
+	end
