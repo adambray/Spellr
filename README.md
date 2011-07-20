@@ -1,40 +1,51 @@
-NOTE: If in doubt about how to submit your project, read SUBMISSION_GUIDELINES
+# Speller: Spell check using Ruby
 
-While it's nice to work with software stacks that are Ruby top to bottom,
-sometimes it's necessary to take advantages of some of the great libraries that
-other programming languages have to offer. There are many ways to integrate Ruby
-code with non-Ruby code, but one of the most promising approaches is to use
-Ruby-FFI.
+Speller provides an interface (using ffi) to the GUN ASpell library. Currently, it offers the ability to check words or a string of words for correctness, and return suggestions.
 
-In this exercise, you will be wrapping a third party library from a different
-language using FFI (typically C libraries, but many languages support FFI), 
-and then building an interesting library or application on top of that wrapper.
+##Usage
 
-While working on this assignment, please keep the following guidelines in mind:
+###Config
+Before you can spell check a string, you need to set your configuration options. To do so, you create an instance of the Speller::Config class.
 
-* You can choose any library you'd like to wrap, as long as it can run on OS X
-or Linux, and is released under a GPLv3 compatible free software licenses (most
-common free software licenses are compatible, but [check the full
-listing](http://www.gnu.org/licenses/license-list.html#GPLCompatibleLicenses) if in doubt.)
+When creating an instance of Speller::Config, you must specify one arguement, the language code to be used:
+`my_config = Speller::Config.new("en_US")`
 
-* You not expected to wrap the entire API of the library you are targeting, but
-you should choose a project that requires you to write a non-trivial amount of 
-FFI code.
+You can then set any additional configuration options using set_value:
+`my_config.set_value("size", 5)`
 
-* The code that sits on top of your wrapper can either be a library that exposes
-the functionality of the third party library in a way that's natural to Ruby, or
-an application that depends on the functionality of the library you are
-wrapping. In either case, you should have some realistic examples of how your
-program is meant to be used.
+*For info on what options are available, see the [GNU ASpell Documentation](http://aspell.net/man-html/The-Options.html)*
 
-* Your wrapper should ideally wrap a library that doesn't already have an FFI
-wrapper built for it. However, if you are exposing a different aspect of a
-library than other wrappers do, it might be okay to wrap something that has
-already been targeted.
+Once you've set all your configuration options, create a new instance of Speller::Checker:
+`my_checker = Speller::Checker.new(my_config.config)`
 
-* You should make sure to enter your proposed project ideas into university-web 
-so that the instructors can review them and also so that we can avoid having
-multiple students target the same library.
+**Note that you must set all options before creating a new Speller::Checker instance.**
 
-* If you've never done FFI work before, the [wiki](https://github.com/ffi/ffi/wiki/) 
-is a good place to start.
+###Checking Spelling
+
+Speller:Checker has a couple of methods for checking spelling:
+
+To check for correctness, use the `correct?` method:
+`my_checker.correct?("word") 	#returns true`
+`my_checker.correct?("wordd")	#returns false`
+
+To get suggestions for a word, use the `suggest` method. This method returns the suggested corrections as an array of strings. If the word is spelled correctly, it returns an empty array.
+
+`my_checker.suggest("word")`
+`my_checker.suggest("wordd")`
+
+
+To check an entire string, use the `check_string` method, providing the string to check, and an optional integer offset indicating where to begin checking. If no offset is provided, the method will check from the beginning of the string.
+
+The `check_string` method returns an array with three elements. The first element is a string of the first misspelled word detected; the second is the offset at which the word was found; the third is an array of suggested corrections.
+
+If no misspellings are found, `check_string` returns `nil`.
+
+string = "This longg string has two misspelled words. The secondd misspelling is in the second sentence."
+
+result = my_checker.check_string(string)
+if result
+  puts "The word '#{result[0]}' is misspelled at offset #{result[1]}"
+  puts "Suggested spellings: #{result[2].join(", ")}"
+else
+  puts "No mispellings found"
+end
