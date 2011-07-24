@@ -1,12 +1,17 @@
+require 'strscan'
+
 module Speller
   class Checker
     
     def initialize(aspell_config)
       possible_err = Speller::ASpell.new_aspell_speller(aspell_config)
       @checker = Speller::ASpell.to_aspell_speller(possible_err)
+      
+      ObjectSpace.define_finalizer( self, self.class.destroy(@checker) )
     end
 
     def correct?(word)
+        return unless word
         result = Speller::ASpell.speller_check(@checker, word, word.length)
         return result == 1 ? true : false
     end
@@ -31,34 +36,28 @@ module Speller
     end
   
     def check_string(string, offset=nil)
-      offset ? @offset = offset : @offset ||= 0
+      @s = StringScanner.new(string)
+      word_set = []
+
+      while !@s.eos?      
+        @s.scan(/\W+/)
+        word = @s.scan(/\w+/)
+        
+        break if word.nil?
+        
+        if !correct?(word)
+          word_set << [word, @s.pos - (word.length), suggest(word)]
+        end
       
-      # If we've reached the end of the string and found no errors
-      return nil if @offset >= string.length + 1
-      
-      #build each word
-      word = ""
-      until string[@offset,1] =~ /\W/ or @offset == (string.length) do
-        word += string[@offset,1]
-        @offset += 1
       end
-      @offset += 1
-      
-      # skip forward if somehow we've captured a non-word word
-      return check_string(string) if (word =~ /\W/ || word == "")
-      
-      if !correct?(word)
-        return [word, @offset - (word.length + 1), suggest(word)]
-      else
-        return check_string(string)
-      end
+
+      return word_set
     end
     
-    def destroy
-      Speller::ASpell.delete_aspell_speller(@checker)
-      @checker = nil
+    def self.destroy(checker)
+      proc { Speller::ASpell.delete_aspell_speller(checker) }
     end
-
+    
   end
 end
 
