@@ -7,6 +7,8 @@ module Speller
       possible_err = Speller::ASpell.new_aspell_speller(aspell_config)
       @checker = Speller::ASpell.to_aspell_speller(possible_err)
       
+      # Free memory from aspell checker object when our 
+      # Ruby object is destroyed by the GC
       ObjectSpace.define_finalizer( self, self.class.destroy(@checker) )
     end
 

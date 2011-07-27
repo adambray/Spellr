@@ -7,14 +7,17 @@ module Speller
         @config = Speller::ASpell.new_aspell_config
         Speller::ASpell.config_replace(@config,"lang", lang)
 
+        # Free memory from aspell config object when our 
+        # Ruby object is destroyed by the GC
         ObjectSpace.define_finalizer( self, self.class.destroy(@config) )
     end
 
-    def set_value(key, value)
+    def []= (key, value)
       Speller::ASpell.config_replace(@config, key, value)
     end
     
-    def get_value(key)
+    def [](key)
+      Speller::ASpell.config_retrieve(@config, key)
     end
     
     def self.destroy(config)

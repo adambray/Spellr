@@ -3,8 +3,14 @@ require 'ffi'
 require File.expand_path('../../lib/speller', __FILE__)
 
 #Create a new Checker object
-my_config = Speller::Config.new("en_US")
-my_config.set_value("ignore-case", "true")
+my_config = Speller::Config.new("es_US")
+
+my_config["ignore-case"] = "true"
+my_config["lang"] = "en_US"
+
+puts my_config["ignore-case"]
+puts my_config["lang"]
+
 my_checker = Speller::Checker.new(my_config.config)
 
 #Checks if a word is correct

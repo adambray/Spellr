@@ -3,86 +3,75 @@ module Speller
   
     extend FFI::Library
     ffi_lib ENV["ASPELL_LIB"] || "aspell"  
-    
-    def self.aspell_method(method_name,
-      arguments,
-      return_type,
-      prefix = true)
-                           
-      c_method_name = (prefix ? "aspell_#{method_name}" : "#{method_name}")
-      attach_function method_name, c_method_name, arguments, return_type
-    end    
-    
-
+        
     typedef :pointer, :aspell_config
-    typedef :pointer, :aspell_key_info
-    
+    typedef :pointer, :aspell_can_have_error
+    typedef :pointer, :aspell_speller
+    typedef :pointer, :aspell_string_enumeration
+    typedef :pointer, :aspell_word_list
 
     # ASpell Config
-    aspell_method :new_aspell_config,
+    attach_function :new_aspell_config,
       [],
-      :aspell_config,
-      false                     
+      :aspell_config             
     
-    aspell_method :delete_aspell_config,
+    attach_function :delete_aspell_config,
       [:aspell_config],
-      :void,
-      false             
+      :void    
     
-    aspell_method :config_replace,
+    attach_function :config_replace, :aspell_config_replace,
       [:aspell_config, :string, :string],
       :int        
 
+    attach_function :config_retrieve, :aspell_config_retrieve,
+      [:aspell_config, :string],
+      :string
+
     # Speller Management
-    aspell_method :new_aspell_speller,
-      [:pointer],
-      :pointer,
-      false
+    attach_function :new_aspell_speller,
+      [:aspell_config],
+      :aspell_can_have_error
     
-    aspell_method :to_aspell_speller,
-      [:pointer],
-      :pointer,
-      false
+    attach_function :to_aspell_speller,
+      [:aspell_can_have_error],
+      :aspell_speller
     
-    aspell_method :delete_aspell_speller,
-      [:pointer],
-      :void,
-      false
+    attach_function :delete_aspell_speller,
+      [:aspell_speller],
+      :void
         
     #Speller Functions
-    aspell_method :speller_check,
-      [:pointer, :string, :int],
+    attach_function :speller_check, :aspell_speller_check,
+      [:aspell_speller, :string, :int],
       :int 
     
-    aspell_method :speller_suggest,
-      [:pointer, :string, :int],
+    attach_function :speller_suggest, :aspell_speller_suggest,
+      [:aspell_speller, :string, :int],
       :pointer
 
-    aspell_method :word_list_elements,
-      [:pointer],
-      :pointer
+    attach_function :word_list_elements, :aspell_word_list_elements,
+      [:aspell_word_list],
+      :aspell_string_enumeration
             
-    aspell_method :string_enumeration_next,
-      [:pointer],
+    attach_function :string_enumeration_next, :aspell_string_enumeration_next,
+      [:aspell_string_enumeration],
       :string
     
-    aspell_method :delete_aspell_string_enumeration,
-      [:pointer],
-      :void,
-      false
+    attach_function :delete_aspell_string_enumeration,
+      [:aspell_string_enumeration],
+      :void
 
-    aspell_method :speller_add_to_personal,
-      [:pointer, :string, :int],
+    attach_function :speller_add_to_personal, :aspell_speller_add_to_personal,
+      [:aspell_speller, :string, :int],
       :int
     
-    aspell_method :speller_add_to_session,
-      [:pointer, :string, :int],
+    attach_function :speller_add_to_session, :aspell_speller_add_to_session,
+      [:aspell_speller, :string, :int],
       :int
     
-    aspell_method :speller_store_replacement,
-      [:pointer, :string, :int, :string, :int],
+    attach_function :speller_store_replacement, :aspell_speller_store_replacement,
+      [:aspell_speller, :string, :int, :string, :int],
       :int
-
   end
   
 end

@@ -11,9 +11,13 @@ When creating an instance of Speller::Config, you must specify one arguement, th
 
 	my_config = Speller::Config.new("en_US")
 
-You can then set any additional configuration options using set_value:
+You can then set any additional configuration options:
 
-	my_config.set_value("ignore-case", "true")
+	my_config["ignore-case"] = "true"
+	
+To retrieve configuration options:
+
+	my_config["ignore-case"]    # returns 'true'
 
 *For info on what options are available, see the [GNU ASpell Documentation](http://aspell.net/man-html/The-Options.html)*
 
@@ -40,7 +44,7 @@ To get suggestions for a word, use the `suggest` method. This method returns the
 
 To check an entire string, use the `check_string` method, providing the string to check, and an optional integer offset indicating where to begin checking. If no offset is provided, the method will check from the beginning of the string.
 
-The `check_string` method returns an array. Each element in this array is another array, corresponding to a misspelled word in the string. The first element of the inner array is a string of the first misspelled word detected; the second is the offset at which the word was found; the third is an array of suggested corrections.
+The `check_string` method returns an array. Each element in this array is another array, corresponding to a misspelled word in the string. The first element of the inner array is a string equal to the misspelled word detected; the second is the offset at which the word was found; the third is an array of suggested corrections.
 
 If no misspellings are found, `check_string` returns an empty array.
 
@@ -51,9 +55,3 @@ If no misspellings are found, `check_string` returns an empty array.
   		puts "The word '#{misspelling[0]}' is misspelled at offset #{mispelling[1]}"
   		puts "Suggested spellings: #{mispelling[2].join(", ")}"
 	end
-	
-###Memory Management
-
-When you are done using an instance of Speller::Config or Speller::Checker, you should destroy them using the `destroy` method.
-
-Note that once you've created a Speller::Checker instance, you can destroy the instance of Speller::Config used to create it, if you wish.

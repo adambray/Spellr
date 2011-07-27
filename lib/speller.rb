@@ -1,6 +1,6 @@
-require 'rubygems'
 require 'ffi'
 
-require File.expand_path('../speller/aspell', __FILE__)
-require File.expand_path('../speller/config', __FILE__)
-require File.expand_path('../speller/checker', __FILE__)
+require_relative('speller/aspell')
+require_relative('speller/config')
+require_relative('speller/checker')
+require_relative('speller/version')
